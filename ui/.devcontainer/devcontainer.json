@@ -1,0 +1,22 @@
+{
+  "name": "Archimera UI",
+  "build": {
+    "context": "../..",
+    "dockerfile": "../infra/docker/Dockerfile.ui"
+  },
+  "workspaceFolder": "/app/ui",
+  "remoteUser": "root",
+  "forwardPorts": [8501],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.analysis.typeCheckingMode": "off"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  }
+}

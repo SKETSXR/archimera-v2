@@ -1,0 +1,23 @@
+{
+  "name": "Archimera Retrieval (GPU)",
+  "build": {
+    "context": "../..",
+    "dockerfile": "../infra/docker/Dockerfile.retrieval"
+  },
+  "runArgs": ["--gpus", "all"],
+  "workspaceFolder": "/app/retrieval",
+  "remoteUser": "root",
+  "forwardPorts": [9000],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.analysis.typeCheckingMode": "basic"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  }
+}

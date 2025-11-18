@@ -1,0 +1,22 @@
+{
+  "name": "Archimera Backend",
+  "build": {
+    "context": "../..",
+    "dockerfile": "../infra/docker/Dockerfile.backend"
+  },
+  "workspaceFolder": "/app/backend",
+  "remoteUser": "root",
+  "forwardPorts": [8000],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.analysis.typeCheckingMode": "basic"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  }
+}

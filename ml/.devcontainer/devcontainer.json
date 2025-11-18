@@ -1,0 +1,22 @@
+{
+  "name": "Archimera ML (GPU)",
+  "build": {
+    "context": "../..",
+    "dockerfile": "../infra/docker/Dockerfile.ml"
+  },
+  "runArgs": ["--gpus", "all"],
+  "workspaceFolder": "/app/ml",
+  "remoteUser": "root",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.analysis.typeCheckingMode": "basic"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  }
+}

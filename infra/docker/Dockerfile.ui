@@ -1,0 +1,24 @@
+# infra/docker/Dockerfile.ui
+FROM python:3.11-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --upgrade pip
+
+# Install UI deps
+COPY ui/requirements.txt ./ui_requirements.txt
+RUN pip install --no-cache-dir -r ui_requirements.txt
+
+# Copy UI code
+COPY ui/ ./ui/
+
+EXPOSE 8501
+
+CMD ["streamlit", "run", "ui/streamlit_app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
