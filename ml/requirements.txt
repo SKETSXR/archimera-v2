@@ -1,0 +1,13 @@
+transformers==4.41.2
+tokenizers==0.19.1
+sentencepiece==0.2.0
+numpy==1.26.4
+scipy==1.13.1
+tqdm==4.66.4
+pyyaml==6.0.1
+
+faiss-gpu==1.7.2
+
+# If training code uses image loading/augs:
+pillow==10.3.0
+opencv-python-headless==4.9.0.80
