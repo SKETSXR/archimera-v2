@@ -40,22 +40,23 @@ The two worlds communicate *only* via:
 
 ```mermaid
 flowchart LR
-    subgraph Linux[Linux / Docker Environment]
-        UI[UI (Streamlit)] --> Backend[Backend API]
-        Backend --> Mongo[(MongoDB)]
-        Backend --> FileStore[/File Server Mount\n/mnt/cad_store/]
-        ML[ML Pipeline] --> Mongo
+    subgraph Linux["Linux / Docker Environment"]
+        UI["UI (Streamlit)"] --> Backend["Backend API"]
+        Backend --> Mongo["MongoDB"]
+        Backend --> FileStore["File Server Mount<br/>/mnt/cad_store/"]
+        ML["ML Pipeline"] --> Mongo
         ML --> FileStore
-        Retrieval[Retrieval API\n+ FAISS] --> Mongo
+        Retrieval["Retrieval API + FAISS"] --> Mongo
         Retrieval --> FileStore
     end
 
-    subgraph Windows[Windows Environment]
-        CADWorker[CAD Worker\n(AutoCAD + pyautocad)] --> FileStoreWin[/File Server Mount\nZ:\\cad_store\\]
+    subgraph Windows["Windows Environment"]
+        CADWorker["CAD Worker<br/>(AutoCAD + pyautocad)"] --> FileStoreWin["File Server Mount<br/>Z:\\cad_store"]
         CADWorker --> Mongo
     end
 
-    FileStoreWin <-- Shared Storage --> FileStore
+    FileStoreWin <-- "Shared Storage" --> FileStore
+
 ```
 
 ---
@@ -564,18 +565,19 @@ flowchart LR
     UserSketch[User Sketch + Tags] --> UIQ[UI]
     UIQ --> SearchAPI[Retrieval API]
 
-    subgraph RetrievalService[Retrieval Service]
-        SearchAPI --> EmbedQuery[Embed Query\n(CLIP + P_in)]
+    subgraph RetrievalService
+        SearchAPI --> EmbedQuery["Embed Query (CLIP + P_in)"]
         EmbedQuery --> Zq[(z_query)]
-        Zq --> FAISS[FAISS Index\n(z_out for CAD views)]
+        Zq --> FAISS["FAISS Index (z_out for CAD views)"]
         FAISS --> TopK[Top-K FAISS IDs]
-        TopK --> EmbeddingsDB[(embeddings collection)]
-        EmbeddingsDB --> ViewsDB[(views collection)]
+        TopK --> EmbeddingsDB[(Embeddings Collection)]
+        EmbeddingsDB --> ViewsDB[(Views Collection)]
         ViewsDB --> Results[Ranked Views + Metadata]
     end
 
     Results --> UIQ
-    UIQ --> UserResult[Show similar CAD designs]
+    UIQ --> UserResult[Show Similar CAD Designs]
+
 ```
 
 ---
