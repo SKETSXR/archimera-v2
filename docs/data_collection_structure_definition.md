@@ -109,3 +109,123 @@ Each view gets a record containing:
   * Embedding pipeline
   * Retrieval training dataset
 * Ensures every dataset sample gets the required **S** (sketch), **T** (tag-text), **C** (CAD metadata) representation.
+
+## 5. Class Definitions (practical version)
+
+We will define some Pydantic models to represent Data Collection:
+
+### Helper functions
+
+```python
+from datetime import datetime
+from typing import List, Optional, Literal
+from pydantic import BaseModel, Field
+```
+
+### File Reference
+
+```python
+class FileRef(BaseModel):
+    rel_path: str
+    content_type: str
+    size_bytes: Optional[int] = None
+    checksum: Optional[str] = None # e.g. sha256, good for dedupe
+```
+
+### Tags
+
+```python
+class Tag(BaseModel):
+    category: str # e.g. "Materials"
+    value: str # e.g. "Solid Wood"
+```
+
+### Project Location
+
+```python
+class ProjectLocation(BaseModel):
+    country: str
+    state: str
+    city: str
+    locality: Optional[str] = None
+    postal_code: Optional[str] = None
+```
+
+### Asset
+
+```python
+class Asset(BaseModel):
+    id: str = Field(alias="_id") # maps to Mongo _id
+    client_name: str
+    project_name: str
+
+    category: str # "wardrobe", "kitchen", etc.
+    subcategory: Optional[str] = None # "hinged", "sliding", ...
+
+    location: ProjectLocation
+    project_type: Literal["residential", "commercial", "hospitality", "office"]
+    room_type: Optional[str] = None # "bedroom", "kitchen", ...
+
+    style: Optional[str] = None # "modern", "classic", ...
+
+    created_by: Optional[str] # person who delivered the asset
+    uploaded_by: str # person who is uploading the asset
+    studio: Literal["B1", "B2", "S1", "F1"] # more can be added
+
+    uploaded_at: datetime
+    updated_at: datetime
+```
+
+### View Files
+
+```python
+class ViewFiles(BaseModel):
+    sketch: Optional[FileRef] = None
+    cad: Optional[FileRef] = None
+    raster: Optional[FileRef] = None # filled by worker
+    metadata: Optional[FileRef] = None # filled by worker
+```
+
+### View
+
+```python
+class View(BaseModel):
+    id: str = Field(alias="_id")
+    asset_id: str
+
+    view_type: Literal["elevation", "plan", "section", "detail"] # more can be added
+    orientation: Optional[Literal["North", "East", "West", "South"]] = None
+    scale: Optional[str] = None # Template sketch:original
+    view_name: Optional[str] = None
+
+    files: ViewFiles
+    description: Optional[str] = None
+
+    status: Literal["Pending Processing", "Ready for Embedding", "Embedded", "Error"] = "Pending Processing"
+    last_processing_error: Optional[str] = None
+```
+
+### Embedding Vector
+
+```python
+class EmbeddingVector(BaseModel):
+    vector: List[float]
+    dim: int
+    faiss_id: Optional[int] = None
+```
+
+### Embedding Document
+
+```python
+class EmbeddingDoc(BaseModel):
+    id: str = Field(alias="_id")
+    asset_id: str
+    view_id: str
+    model_version: str
+
+    input_embedding: Optional[EmbeddingVector] = None
+    output_embedding: Optional[EmbeddingVector] = None
+
+    created_at: datetime
+    updated_at: datetime
+```
