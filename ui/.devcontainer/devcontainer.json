@@ -1,12 +1,16 @@
 {
   "name": "Archimera UI",
-  "build": {
-    "context": "../..",
-    "dockerfile": "../infra/docker/Dockerfile.ui"
-  },
+  "dockerComposeFile": "../../infra/docker/docker-compose.yml",
+  "service": "ui",
   "workspaceFolder": "/app/ui",
+  "shutdownAction": "stopCompose",
   "remoteUser": "root",
   "forwardPorts": [8501],
+  "runServices": [
+    "backend",
+    "ui",
+    "mongo"
+  ],
   "customizations": {
     "vscode": {
       "settings": {

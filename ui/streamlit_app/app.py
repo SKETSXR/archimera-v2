@@ -1,0 +1,66 @@
+"""
+Main Streamlit application entrypoint for Archimera UI.
+
+This file wires together the high-level layout, tabs, and form components.
+All heavy lifting is delegated to functions in the `components`, `state`,
+and `constants` modules.
+"""
+
+import streamlit as st
+
+from components.asset_form import render_asset_form
+from components.view_form import render_view_section
+from state.session_state import init_session_state
+from state.form_serializers import build_submission_payload
+from constants.config import APP_TITLE
+
+
+def main() -> None:
+    """
+    Main function that builds the Streamlit UI.
+
+    This function:
+        - Configures the page.
+        - Initializes session state.
+        - Renders two main tabs:
+            1. Asset Addition
+            2. Asset Retrieval (placeholder for now)
+        - Handles "Submit" action for asset addition.
+    """
+    # Basic page configuration
+    st.set_page_config(page_title=APP_TITLE, layout="wide")
+
+    # Make sure all session state keys exist
+    init_session_state()
+
+    st.title("🗂️ Archimera — Asset Management Console")
+
+    # Two main tabs: one for data collection, one for retrieval
+    tab_add, tab_search = st.tabs(["➕ Asset Addition", "🔍 Asset Retrieval"])
+
+    # -----------------------------
+    # TAB: Retrieval (placeholder)
+    # -----------------------------
+    with tab_search:
+        st.header("🚧 Asset Retrieval")
+        st.info("This module is currently in development. Chill, it’s coming.")
+
+    # -----------------------------
+    # TAB: Asset Addition (active)
+    # -----------------------------
+    with tab_add:
+        st.subheader("Add a New Asset")
+
+        # Render forms for asset metadata and view data
+        asset_metadata = render_asset_form()
+        views = render_view_section()
+
+        # Action button to "submit" the asset (mock only for now)
+        if st.button("🚀 Submit Asset (Mock — nothing is stored)"):
+            payload = build_submission_payload(asset_metadata, views)
+            st.success("Form validated! (Mock submission — no persistence yet).")
+            st.json(payload)
+
+
+if __name__ == "__main__":
+    main()
