@@ -18,6 +18,7 @@ services:
     container_name: archimera_backend
     depends_on:
       - mongo
+    restart: unless-stopped
     environment:
       MONGO_URI: "mongodb://mongo:27017/cad_db"
       # add other backend env vars here as needed
@@ -34,6 +35,7 @@ services:
     container_name: archimera_retrieval
     depends_on:
       - mongo
+    restart: unless-stopped
     environment:
       MONGO_URI: "mongodb://mongo:27017/cad_db"
       # MODEL_VERSION: "v1.0"
@@ -62,6 +64,7 @@ services:
     container_name: archimera_ui
     depends_on:
       - backend
+    restart: unless-stopped
     environment:
       BACKEND_URL: "http://backend:8000"
     ports:
