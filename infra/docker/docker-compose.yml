@@ -1,0 +1,71 @@
+# infra/docker/docker-compose.yml
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: archimera_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.backend
+    container_name: archimera_backend
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: "mongodb://mongo:27017/cad_db"
+      # add other backend env vars here as needed
+      # FILE_BASE_DIR: "/mnt/cad_store"
+    ports:
+      - "8000:8000"
+    # volumes:
+    #   - /path/to/host/cad_store:/mnt/cad_store
+
+  retrieval:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.retrieval
+    container_name: archimera_retrieval
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: "mongodb://mongo:27017/cad_db"
+      # MODEL_VERSION: "v1.0"
+    ports:
+      - "9000:9000"
+
+  ml:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.ml
+    container_name: archimera_ml
+    depends_on:
+      - mongo
+    runtime: nvidia
+    environment:
+      MONGO_URI: "mongodb://mongo:27017/cad_db"
+      NVIDIA_VISIBLE_DEVICES: "all"
+    command: ["sleep", "infinity"]
+    # no ports; you'll run batch jobs manually:
+    # docker compose run --rm ml python -m ml.training.train_contrastive
+
+  ui:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.ui
+    container_name: archimera_ui
+    depends_on:
+      - backend
+    environment:
+      BACKEND_URL: "http://backend:8000"
+    ports:
+      - "8501:8501"
+
+volumes:
+  mongo_data:

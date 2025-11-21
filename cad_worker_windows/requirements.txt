@@ -7,6 +7,7 @@ pymongo==4.7.2
 # CAD handling
 ###########################################
 ezdxf==1.2.0
+pymupdf==1.26.6
 
 ###########################################
 # AutoCAD automation (Windows COM)

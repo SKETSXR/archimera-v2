@@ -1,13 +1,15 @@
 {
   "name": "Archimera Retrieval (GPU)",
-  "build": {
-    "context": "../..",
-    "dockerfile": "../infra/docker/Dockerfile.retrieval"
-  },
-  "runArgs": ["--gpus", "all"],
+  "dockerComposeFile": "../../infra/docker/docker-compose.yml",
+  "service": "retrieval",
   "workspaceFolder": "/app/retrieval",
+  "shutdownAction": "stopCompose",
   "remoteUser": "root",
   "forwardPorts": [9000],
+  "runServices": [
+    "mongo",
+    "retrieval"
+  ],
   "customizations": {
     "vscode": {
       "settings": {

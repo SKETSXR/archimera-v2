@@ -1,10 +1,9 @@
 {
   "name": "Archimera Backend",
-  "build": {
-    "context": "../..",
-    "dockerfile": "../infra/docker/Dockerfile.backend"
-  },
+  "dockerComposeFile": "../../infra/docker/docker-compose.yml",
+  "service": "backend",
   "workspaceFolder": "/app/backend",
+  "shutdownAction": "stopCompose",
   "remoteUser": "root",
   "forwardPorts": [8000],
   "customizations": {

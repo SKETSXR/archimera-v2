@@ -1,12 +1,14 @@
 {
   "name": "Archimera ML (GPU)",
-  "build": {
-    "context": "../..",
-    "dockerfile": "../infra/docker/Dockerfile.ml"
-  },
-  "runArgs": ["--gpus", "all"],
+  "dockerComposeFile": "../../infra/docker/docker-compose.yml",
+  "service": "ml",
   "workspaceFolder": "/app/ml",
+  "shutdownAction": "stopCompose",
   "remoteUser": "root",
+  "runServices": [
+    "mongo",
+    "ml"
+  ],
   "customizations": {
     "vscode": {
       "settings": {
