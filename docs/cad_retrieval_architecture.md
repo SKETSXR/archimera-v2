@@ -514,9 +514,9 @@ Steps when user searches:
 2. **Embeddings**:
    - $e_{s_q} = f_\text{img}(S_\text{query})$
    - $e_{t_q} = f_\text{txt}(T_\text{query})$
-   - Concatenate: $E_\text{in\_query} = [e_{s_q} ; e_{t_q}]$
-   - Project: $z_\text{query} = P_{in}(E_\text{in\_query})$
-   - Normalize: $z_\text{query\_norm} = \frac{z_\text{query}}{||z_\text{query}||}$
+   - Concatenate: $E_\text{inquery} = [e_{s_q} ; e_{t_q}]$
+   - Project: $z_\text{query} = P_{in}(E_\text{inquery})$
+   - Normalize: $z_\text{querynorm} = \frac{z_\text{query}}{||z_\text{query}||}$
 
 ### 7.2 FAISS retrieval
 
