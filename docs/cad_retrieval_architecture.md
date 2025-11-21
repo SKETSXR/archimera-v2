@@ -424,8 +424,13 @@ Combine via **concatenation**:
 
 Two MLPs (separate weights):
 
-$$P_{in} : \mathbb{R}^{D_{in}} \rightarrow \mathbb{R}^{D_{shared}}$$
-$$P_{out} : \mathbb{R}^{D_{out}} \rightarrow \mathbb{R}^{D_{shared}}$$
+$$
+P_{in} : \mathbb{R}^{D_{in}} \rightarrow \mathbb{R}^{D_{shared}}
+$$
+
+$$
+P_{out} : \mathbb{R}^{D_{out}} \rightarrow \mathbb{R}^{D_{shared}}
+$$
 
 Outputs:
 
@@ -442,32 +447,33 @@ Optionally normalize:
 For a batch of N matched pairs $(E_{in}^i, E_{out}^i)$:
 
 1. Compute:
-   - $z_{in}^i = P_{in}(E_{in}^i)$
-   - $z_{out}^i = P_{out}(E_{out}^i)$
+  
+- $z_{in}^i = P_{in}(E_{in}^i)$
+- $z_{out}^i = P_{out}(E_{out}^i)$
 
 2. Similarity matrix (e.g. cosine or dot-product):
 
-   - $S_{ij} = \texttt{sim}(z_{in}^i, z_{out}^j)$
+- $S_{ij} = \texttt{sim}(z_{in}^i, z_{out}^j)$
 
 3. InfoNCE-style loss:
 
-   - Query→CAD:
+- Query→CAD:
 
-     $$
-     L_\text{in} = -\frac{1}{N} \sum_i \log \frac{\exp(S_{ii}/\tau)}{\sum_j \exp(S_{ij}/\tau)}
-     $$
+$$
+L_\text{in} = -\frac{1}{N} \sum_i \log \frac{\exp(S_{ii}/\tau)}{\sum_j \exp(S_{ij}/\tau)}
+$$
 
-   - CAD→Query (optional symmetric):
+- CAD→Query (optional symmetric):
 
-     $$
-     L_\text{out} = -\frac{1}{N} \sum_i \log \frac{\exp(S_{ii}/\tau)}{\sum_j \exp(S_{ji}/\tau)}
-     $$
+$$
+L_\text{out} = -\frac{1}{N} \sum_i \log \frac{\exp(S_{ii}/\tau)}{\sum_j \exp(S_{ji}/\tau)}
+$$
 
-   - Final loss:
+- Final loss:
 
-     $$
-     L = \frac{L_\text{in} + L_\text{out}}{2}
-     $$
+$$
+L = \frac{L_\text{in} + L_\text{out}}{2}
+$$
 
 ### 6.4 Training flow
 
