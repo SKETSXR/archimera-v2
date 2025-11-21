@@ -383,91 +383,91 @@ Under `infra/docker/docker-compose.yml`, you typically run:
 
 You use a frozen CLIP-like model:
 
-- `f_img(x)` → image embedding (dimension `D_img`)
-- `f_txt(t)` → text embedding (dimension `D_txt`)
+- $f_\text{img}(x)$ → image embedding (dimension $D_\text{img}$)
+- $f_\text{txt}(t)$ → text embedding (dimension $D_\text{txt}$)
 
 #### Input (query) side
 
 For each training view / query:
 
-- Sketch image `S_i`
-- Tag text `T` (e.g. `"hinged two-door wardrobe"`)
+- Sketch image $S_i$
+- Tag text $T$ (e.g. `"hinged two-door wardrobe"`)
 
 Compute:
 
-- `e_s = f_img(S_i)`
-- `e_t = f_txt(T)`
+- $e_s = f_\text{img}(S_i)$
+- $e_t = f_\text{txt}(T)$
 
 Combine via **concatenation**:
 
-- `E_in = [e_s ; e_t]`  
-  → dimension `D_in = D_img + D_txt`
+- $E_{in} = [e_s ; e_t]$  
+  → dimension $D_{in} = D_\text{img} + D_\text{txt}$
 
 #### Output (CAD) side
 
 For the corresponding CAD view:
 
-- Rasterized CAD image `C_i`
-- Metadata text `O_i` (extracted from CAD)
+- Rasterized CAD image $C_i$
+- Metadata text $O_i$ (extracted from CAD)
 
 Compute:
 
-- `e_c = f_img(C_i)`
-- `e_o = f_txt(O_i)`
+- $e_c = f_\text{img}(C_i)$
+- $e_o = f_\text{txt}(O_i)$
 
 Combine via **concatenation**:
 
-- `E_out = [e_c ; e_o]`  
-  → dimension `D_out = D_img + D_txt` (same as `D_in` if same encoders).
+- $E_{out} = [e_c ; e_o]$  
+  → dimension $D_{out} = D_\text{img} + D_\text{txt}$ (same as $D_{in}$ if same encoders).
 
 ### 6.2 Projection heads
 
 Two MLPs (separate weights):
 
-- `P_in: R^(D_in) → R^D_shared`
-- `P_out: R^(D_out) → R^D_shared`
+$$P_{in} : \mathbb{R}^{D_{in}} \rightarrow \mathbb{R}^{D_{shared}}$$
+$$P_{out} : \mathbb{R}^{D_{out}} \rightarrow \mathbb{R}^{D_{shared}}$$
 
 Outputs:
 
-- `z_in = P_in(E_in)`   (query-side embedding)
-- `z_out = P_out(E_out)` (CAD-side embedding)
+- $z_{in} = P_{in}(E_{in})$   (query-side embedding)
+- $z_{out} = P_{out}(E_{out})$ (CAD-side embedding)
 
 Optionally normalize:
 
-- `z_in_norm = z_in / ||z_in||`
-- `z_out_norm = z_out / ||z_out||`
+- $z_{in\_norm} = \frac{z_{in}}{||z_{in}||}$
+- $z_{out\_norm} = \frac{z_{out}}{||z_{out}||}$
 
 ### 6.3 Loss (contrastive)
 
-For a batch of N matched pairs `(E_in^i, E_out^i)`:
+For a batch of N matched pairs $(E_{in}^i, E_{out}^i)$:
 
 1. Compute:
-   - `z_in^i = P_in(E_in^i)`
-   - `z_out^i = P_out(E_out^i)`
+   - $z_{in}^i = P_{in}(E_{in}^i)$
+   - $z_{out}^i = P_{out}(E_{out}^i)$
 
 2. Similarity matrix (e.g. cosine or dot-product):
 
-   - `S_ij = sim(z_in^i, z_out^j)`
+   - $S_{ij} = \texttt{sim}(z_{in}^i, z_{out}^j)$
 
 3. InfoNCE-style loss:
 
    - Query→CAD:
 
-     \[
+     $$
      L_\text{in} = -\frac{1}{N} \sum_i \log \frac{\exp(S_{ii}/\tau)}{\sum_j \exp(S_{ij}/\tau)}
-     \]
+     $$
 
    - CAD→Query (optional symmetric):
 
-     \[
+     $$
      L_\text{out} = -\frac{1}{N} \sum_i \log \frac{\exp(S_{ii}/\tau)}{\sum_j \exp(S_{ji}/\tau)}
-     \]
+     $$
 
    - Final loss:
 
-     \[
+     $$
      L = \frac{L_\text{in} + L_\text{out}}{2}
-     \]
+     $$
 
 ### 6.4 Training flow
 
@@ -502,19 +502,19 @@ For a batch of N matched pairs `(E_in^i, E_out^i)`:
 Steps when user searches:
 
 1. **Input**:
-   - Query sketch image `S_query`.
-   - Tags `T_query` (same tag vocabulary as training).
+   - Query sketch image $S_\text{query}$.
+   - Tags $T_\text{query}$ (same tag vocabulary as training).
 
 2. **Embeddings**:
-   - `e_s_q = f_img(S_query)`
-   - `e_t_q = f_txt(T_query)`
-   - Concatenate: `E_in_query = [e_s_q ; e_t_q]`
-   - Project: `z_query = P_in(E_in_query)`
-   - Normalize: `z_query_norm = z_query / ||z_query||`
+   - $e_{s_q} = f_\text{img}(S_\text{query})$
+   - $e_{t_q} = f_\text{txt}(T_\text{query})$
+   - Concatenate: $E_\text{in\_query} = [e_{s_q} ; e_{t_q}]$
+   - Project: $z_\text{query} = P_{in}(E_\text{in\_query})$
+   - Normalize: $z_\text{query\_norm} = \frac{z_\text{query}}{||z_\text{query}||}$
 
 ### 7.2 FAISS retrieval
 
-1. The FAISS index is built over **CAD-side embeddings** `z_out`:
+1. The FAISS index is built over **CAD-side embeddings** $z_{out}$:
 
    - `retrieval/index/build_index.py`:
      - Reads all `output_embedding.vector` for chosen model version.
