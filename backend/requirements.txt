@@ -3,6 +3,7 @@ uvicorn==0.30.1
 pydantic==2.7.4
 pydantic-settings==2.12.0
 python-multipart==0.0.9
+pymongo==4.15.4
 
 pyyaml==6.0.1
 
