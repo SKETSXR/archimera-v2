@@ -13,3 +13,6 @@ ORIENTATIONS = ["None", "North", "South", "East", "West"]
 
 # Project type options for asset-level metadata
 PROJECT_TYPES = ["residential", "commercial", "hospitality", "office"]
+
+# Studio from where this is getting uploaded
+STUDIOS = ["B1", "B2", "F1", "F2", "S1", "S2"]

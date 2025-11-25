@@ -9,8 +9,9 @@ import streamlit as st
 from typing import Dict, Any
 
 from components.tag_selector import render_tag_selector
-from constants.view_types import PROJECT_TYPES
+from constants.view_types import PROJECT_TYPES, STUDIOS
 from state.session_state import get_state
+from utils.validators import normalize_text_field, require_non_empty
 
 
 def render_asset_form() -> Dict[str, Any]:
@@ -48,8 +49,13 @@ def render_asset_form() -> Dict[str, Any]:
     with col3:
         created_by = st.text_input("Created By (optional)")
         uploaded_by = st.text_input("Uploaded By")
-        studio = st.text_input("Studio (e.g., B2, F1, S1)")
+        studio = st.selectbox("Studio", STUDIOS)
 
+    # Validating that Location fields are non empty
+    require_non_empty("Country", country)
+    require_non_empty("State / Region", state)
+    require_non_empty("City", city)
+    
     # Location fields
     st.markdown("### 2. Project Location")
     colL1, colL2 = st.columns(2)
@@ -69,15 +75,20 @@ def render_asset_form() -> Dict[str, Any]:
 
     state = get_state()
 
+    category_norm = normalize_text_field(category)
+    subcategory_norm = normalize_text_field(subcategory)
+    room_type_norm = normalize_text_field(room_type)
+    style_norm = normalize_text_field(style)
+
     # Build and return the asset metadata dictionary
     asset_metadata: Dict[str, Any] = {
         "client_name": client_name,
         "project_name": project_name,
-        "category": category,
-        "subcategory": subcategory or None,
-        "project_type": project_type,
-        "room_type": room_type or None,
-        "style": style or None,
+        "category": category_norm,
+        "subcategory": subcategory_norm or None,
+        "project_type": project_type.strip().lower(),
+        "room_type": room_type_norm or None,
+        "style": style_norm or None,
         "created_by": created_by or None,
         "uploaded_by": uploaded_by,
         "studio": studio or None,

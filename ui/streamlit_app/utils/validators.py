@@ -30,3 +30,37 @@ def validate_dwg(file) -> None:
 
     if not filename.endswith(".dwg"):
         st.error("Invalid CAD file. Only .dwg files are allowed.")
+
+
+def normalize_text_field(value: str | None, to_lower: bool = True) -> str | None:
+    """
+    Normalize a free-text field by stripping whitespace and optionally lowercasing.
+
+    Args:
+        value: Raw string or None.
+        to_lower: Whether to convert to lowercase.
+
+    Returns:
+        Normalized string or None if empty.
+    """
+    if not value:
+        return None
+    v = value.strip()
+    if v.lower() == "none":
+        return None
+    return v.lower() if to_lower else v
+
+
+def require_non_empty(label: str, value: str) -> None:
+    """
+    Simple UI-side check to ensure a field is not empty.
+
+    Args:
+        label: Human-readable field name.
+        value: Input value.
+
+    Side-effects:
+        Displays a warning if value is empty.
+    """
+    if not value or not value.strip():
+        st.warning(f"{label} is currently empty. Backend may reject this later.")
