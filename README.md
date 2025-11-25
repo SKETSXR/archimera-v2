@@ -10,3 +10,4 @@ For any clarifications, please contact [Ayush Kumar](mailto:ayushkum@griphic.com
 2. [Idea](./docs/idea.md): This document provides a brief overview of the plan for building the retrieval system.
 3. [CAD Retrieval Architecture](./docs/cad_retrieval_architecture.md): This document describes how the CAD retrieval system is structured, how the Linux (containerized) and Windows (AutoCAD) parts interact, and how data flows through the system.
 4. [Defining a Structure for Data Collection](./docs/data_collection_structure_definition.md): This document will detail the structure which has been defined for collecting data for Archimera. This structure will be a step towards building a searchable library.
+5. [UI Description](./ui/UI_description.md): This document details the UI implementation for the application.
