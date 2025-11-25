@@ -22,11 +22,11 @@ services:
     environment:
       MONGO_URI: "mongodb://mongo:27017/cad_db"
       # add other backend env vars here as needed
-      # FILE_BASE_DIR: "/mnt/cad_store"
+      FILE_BASE_DIR: "/mnt/assets"
     ports:
       - "8000:8000"
-    # volumes:
-    #   - /path/to/host/cad_store:/mnt/cad_store
+    volumes:
+      - ../asset_store:/mnt/assets
 
   retrieval:
     build:
@@ -39,8 +39,11 @@ services:
     environment:
       MONGO_URI: "mongodb://mongo:27017/cad_db"
       # MODEL_VERSION: "v1.0"
+      FILE_BASE_DIR: "/mnt/assets"
     ports:
       - "9000:9000"
+    volumes:
+      - ../asset_store:/mnt/assets:ro
 
   ml:
     build:
@@ -53,7 +56,10 @@ services:
     environment:
       MONGO_URI: "mongodb://mongo:27017/cad_db"
       NVIDIA_VISIBLE_DEVICES: "all"
+      FILE_BASE_DIR: "/mnt/assets"
     command: ["sleep", "infinity"]
+    volumes:
+      - ../asset_store:/mnt/assets:ro
     # no ports; you'll run batch jobs manually:
     # docker compose run --rm ml python -m ml.training.train_contrastive
 
