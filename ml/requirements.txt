@@ -7,7 +7,7 @@ tqdm==4.66.4
 pyyaml==6.0.1
 
 faiss-gpu==1.7.2
-
+ruff==0.14.6
 # If training code uses image loading/augs:
 pillow==10.3.0
 opencv-python-headless==4.9.0.80
