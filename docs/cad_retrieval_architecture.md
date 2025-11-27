@@ -24,12 +24,12 @@ The system consists of two major runtime environments:
   - ML pipeline (embedding + training)
   - Retrieval API (FAISS index)
   - MongoDB
-  - Shared file server mounted (e.g. `/mnt/cad_store`)
+  - Shared file server mounted (e.g. `/mnt/assets`)
 
 - **Windows environment**
   - AutoCAD + pyautocad
   - CAD worker service (`cad_worker_windows`) reading jobs from MongoDB
-  - Same shared file server mounted (e.g. `Z:\cad_store`)
+  - Same shared file server mounted (e.g. `Z:\`)
 
 The two worlds communicate *only* via:
 
@@ -43,7 +43,7 @@ flowchart LR
     subgraph Linux["Linux / Docker Environment"]
         UI["UI (Streamlit)"] --> Backend["Backend API"]
         Backend --> Mongo["MongoDB"]
-        Backend --> FileStore["File Server Mount<br/>/mnt/cad_store/"]
+        Backend --> FileStore["File Server Mount<br/>/mnt/assets/"]
         ML["ML Pipeline"] --> Mongo
         ML --> FileStore
         Retrieval["Retrieval API + FAISS"] --> Mongo
@@ -51,7 +51,7 @@ flowchart LR
     end
 
     subgraph Windows["Windows Environment"]
-        CADWorker["CAD Worker<br/>(AutoCAD + pyautocad)"] --> FileStoreWin["File Server Mount<br/>Z:\\cad_store"]
+        CADWorker["CAD Worker<br/>(AutoCAD + pyautocad)"] --> FileStoreWin["File Server Mount<br/>Z:\\"]
         CADWorker --> Mongo
     end
 
@@ -87,7 +87,7 @@ The UI is built in **Streamlit** (`ui/streamlit_app/`) and communicates with the
    - Chooses deterministic relative paths:
      - `raw/sketch/{asset_id}/{view_id}.png`
      - `raw/cad/{asset_id}/{view_id}.dwg`
-   - Writes files to the shared file server at `/mnt/cad_store/<rel_path>`.
+   - Writes files to the shared file server at `/mnt/assets/<rel_path>`.
    - Creates a `View` document in Mongo:
      - Links to the relative paths.
      - Stores tags.
@@ -113,7 +113,7 @@ sequenceDiagram
 
     User->>UI: Fill asset + view form<br/>Upload sketch & CAD
     UI->>BE: POST /assets/{id}/views<br/>metadata + files
-    BE->>BE: Write files to /mnt/cad_store
+    BE->>BE: Write files to /mnt/assets
     BE->>Mongo: Insert Asset / View docs<br/>status=PENDING_PROCESSING
     BE-->>UI: 201 Created
 
@@ -131,8 +131,8 @@ sequenceDiagram
 
 You use an **internal file server** (e.g. NAS).
 
-- On **Linux**: mounted at `/mnt/cad_store`
-- On **Windows**: mounted at `Z:\cad_store`
+- On **Linux**: mounted at `/mnt/assets`
+- On **Windows**: mounted at `Z:\`
 
 ### 3.1 Directory structure (relative paths)
 
@@ -158,11 +158,11 @@ models/
 
 The absolute path on Linux:
 
-- `/mnt/cad_store/raw/cad/A_001/V_001.dwg`
+- `/mnt/assets/raw/cad/A_001/V_001.dwg`
 
 The absolute path on Windows:
 
-- `Z:\cad_store\raw\cad\A_001\V_001.dwg`
+- `Z:\raw\cad\A_001\V_001.dwg`
 
 In MongoDB, you only store the **relative path** like:  
 `raw/cad/A_001/V_001.dwg`

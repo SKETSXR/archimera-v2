@@ -25,15 +25,15 @@ These fields describe the project/design as a whole:
 * Project Name
 * Category (e.g., wardrobe, kitchen, chair, table)
 * Subcategory (e.g., hinged, sliding, corner) - optional
-* Project Type (residential / commercial / hospitality / office) - more options can be added.
-* Room Type (bedroom, master bedroom, kitchen, etc) - can be optional
+* Project Type (residential / commercial / hospitality / office) - optional.
+* Room Type (bedroom, master bedroom, kitchen, etc) - optional
 * Style (e.g., modern, contemporary, classic) - optional
 
 ### Structured Location
 
 * Country
-* State / Region
-* City
+* State / Region - optional
+* City - optional
 * Locality - optional
 * Postal Code / ZIP code - optional
 
@@ -41,7 +41,7 @@ These fields describe the project/design as a whole:
 
 * Created By (The person who delivered the asset) - optional
 * Uploaded By (The person who is uploading this asset)
-* Studio of person uploading the asset (e.g., B2, F1, S1) - optional
+* Studio of person uploading the asset (e.g., B2, F1, S1)
 
 ### Asset-Level Tags
 
@@ -65,6 +65,7 @@ Every asset contains multiple views (plan, elevation, section, detail).
 * Orientation (north / south / east / west) - optional
 * Scale (will have to enter in `drawing:original` form) - optional
 * View Name - optional
+* View Description - optional
 
 ### Files
 
@@ -72,13 +73,8 @@ Each view contains:
 
 * Sketch upload (prefered PNG but okay with any image format or even pdf)
 * CAD upload (DWG)
-* CAD upload (pdf) - might not be necessary
 * Rasterized CAD (PNG) - generated, not user uploaded
 * CAD Metadata (JSON) - generated, not user uploaded
-
-### View Description
-
-* Description (a small user provided summary for richer embedding context) - optional
 
 ### Processing Fields (System Generated)
 
