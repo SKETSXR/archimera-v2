@@ -19,7 +19,7 @@ Notes:
 import json
 from typing import Dict, Any
 
-from http_client import post
+from .http_client import post
 
 
 def create_asset(asset_metadata: Dict[str, Any]) -> Dict[str, Any]:

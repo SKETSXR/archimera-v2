@@ -13,6 +13,7 @@ from components.view_form import render_view_section
 from services import asset_api, view_api
 from state.session_state import init_session_state
 from state.form_serializers import build_submission_payload
+from utils.validators import validate_data
 from constants.config import APP_TITLE
 
 
@@ -58,19 +59,23 @@ def main() -> None:
 
         # Action button to "submit" the asset (mock only for now)
         if st.button("🚀 Submit Asset (Mock — nothing is stored)"):
-            # payload = build_submission_payload(asset_metadata, views)
-            # st.success("Form validated! (Mock submission — no persistence yet).")
-            # st.json(payload)
+            is_valid = validate_data(asset_metadata)
+            if is_valid[0]:
+                payload = build_submission_payload(asset_metadata, view_metadata_list)
+                st.success("Form validated! (Mock submission — no persistence yet).")
+                st.json(payload)
+            else:
+                st.error(f"validation error: {is_valid[1]}")
             # * Responsive Devs
             # 1. Create Asset
-            asset_resp = asset_api.create_asset(asset_metadata)
-            asset_id = asset_resp["id"]
+            # asset_resp = asset_api.create_asset(asset_metadata)
+            # asset_id = asset_resp["id"]
 
-            # 2. Create each view with metadata + files
-            for meta, files in zip(view_metadata_list, view_files_list):
-                view_api.create_view(asset_id, meta, files)
+            # # 2. Create each view with metadata + files
+            # for meta, files in zip(view_metadata_list, view_files_list):
+            #     view_api.create_view(asset_id, meta, files)
             
-            st.success(f"Asset {asset_id} and {len(view_metadata_list)} views submitted.")
+            # st.success(f"Asset {asset_id} and {len(view_metadata_list)} views submitted.")
 
 
 if __name__ == "__main__":

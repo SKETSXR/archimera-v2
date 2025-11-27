@@ -17,6 +17,7 @@ ui/
             view_form.py
         constants/
             config.py
+            help_texts.py
             tag_vocab.py
             view_types.py
         services/
@@ -146,9 +147,306 @@ PROJECT_TYPES = ["residential", "commercial", "hospitality", "office"]
 
 # Studio from where this is getting uploaded
 STUDIOS = ["B1", "B2", "F1", "F2", "S1", "S2"]
+
+# Category of the asset being uploaded
+CATEGORY = ["wardrobe", "chair", "table"]
+
+# Room type where the asset to be deployed
+ROOM_TYPE = ["bedroom", "master bedroom", "kids room", "kitchen", "living room", "guest room", "hall", "office space", "Unknown"]
+
+# Style of the asset
+STYLE = ["modern", "contemporary", "classic", "minimal", "Unknown"]
 ```
 
-### 3.3. `constants/config.py`
+### 3.3. `constants/help_texts.py`
+
+```python
+"""
+Help text templates for UI fields.
+
+This module centralizes multi-line help strings for each user-facing field.
+The goal is:
+- Single source of truth for descriptions, examples, and restrictions.
+- Reusable, structured & readable help content.
+"""
+
+from typing import Iterable, Optional
+
+def build_help_text(
+    description: str,
+    examples: Optional[Iterable[str]] = None,
+    restrictions: Optional[Iterable[str]] = None,
+) -> str:
+    """
+    Build a formatted multi-line help string for Streamlit's `help=` parameter.
+
+    Format (Markdown):
+
+        Description: ...
+        Examples:
+        - ...
+        - ...
+        Restrictions:
+        - ...
+        - ...
+
+    Args:
+        description: Short, human-readable explanation of the field.
+        examples: Optional iterable of example values.
+        restrictions: Optional iterable of constraints, rules, or notes.
+
+    Returns:
+        A multi-line Markdown string suitable for use as `help=` in Streamlit widgets.
+    """
+    lines: list[str] = []
+
+    # Description
+    lines.append(f"**Description:** {description}")
+
+    # Example values
+    if examples:
+        lines.append("")  # blank line
+        lines.append("**Examples:**")
+        for ex in examples:
+            lines.append(f"- `{ex}`")
+
+    # Restrictions / rules
+    if restrictions:
+        lines.append("")
+        lines.append("**Restrictions:**")
+        for r in restrictions:
+            lines.append(f"- {r}")
+
+    return "\n".join(lines)
+
+# ---------------------------------------------------------------------------
+# Asset-level field help texts
+# ---------------------------------------------------------------------------
+
+CLIENT_NAME_HELP = build_help_text(
+    description="Name of Client to which the project was delivered.",
+    examples=["Acme Corp", "Ravi Sharma", "Mr. Lopez"],
+    restrictions=[
+        "This will be stored as-is and may appear in reports.",
+        "Maximum allowed characters: 100"
+    ]
+)
+
+PROJECT_NAME_HELP = build_help_text(
+    description="Name of the Project",
+    examples=["EASTWOOD RESIDENCE 14-16 STEWART ST EASTWOOD", "THE BRISTOL EMAAR BEACHFRONT TOWER (1B+G+8P+48F)"],
+    restrictions=[
+        "This will be stored as-is and may appear in reports.",
+        "Maximum allowed characters: 256",
+        "Please refer to the right end of the CAD file to view the Project Name."
+    ]
+)
+
+CATEGORY_HELP = build_help_text(
+    description="High-level asset category describing what is being designed.",
+    examples=["wardrobe", "chair", "table"],
+    restrictions=[
+        "Can only select from the drop-down",
+        "If you do not find the appropriate option, please contact admin for adding the option."
+    ]
+)
+
+SUBCATEGORY_HELP = build_help_text(
+    description="More specific type within the category.",
+    examples=["walk in", "corner", "study table"],
+    restrictions=[
+        "Use only lowercase letters and spaces.",
+        "Maximum allowed characters: 64",
+        "If not known, leave it blank."
+    ]
+)
+
+PROJECT_TYPE_HELP = build_help_text(
+    description="Type of project based on usage context.",
+    examples=["residential", "commercial", "hospitality", "office"],
+    restrictions=[
+        "Can only select from the drop-down",
+        "If you do not find the appropriate option, please contact admin for adding the option."
+    ]
+)
+
+ROOM_TYPE_HELP = build_help_text(
+    description="Room where this asset is primarily installed.",
+    examples=["bedroom", "master bedroom", "kids room", "kitchen"],
+    restrictions=[
+        "Can only select from the drop-down",
+        "If you do not find the appropriate option, please contact admin for adding the option.",
+        "Select Unknown only if you have no information about room type.",
+    ]
+)
+
+STYLE_HELP = build_help_text(
+    description="Design style associated with the asset.",
+    examples=["modern", "contemporary", "classic", "minimal"],
+    restrictions=[
+        "Can only select from the drop-down",
+        "If you do not find the appropriate option, please contact admin for adding the option.",
+        "Select Unknown only if you have no information about style.",
+    ]
+)
+
+STUDIO_HELP = build_help_text(
+    description="Internal studio code of the person uploading this asset.",
+    examples=["B1", "B2", "S1"],
+    restrictions=[
+        "Can only select from the drop-down"
+    ]
+)
+
+UPLOADED_BY_HELP = build_help_text(
+    description="Name of the Person who is uploading the asset.",
+    examples=["Ayush Kumar", "Sachin Maurya"],
+    restrictions=[
+        "Only use letters and spaces",
+        "Format: <First Name><space><Last Name>",
+        "Maximum Allowed Characters: 100"
+    ]
+)
+
+CREATED_BY_HELP = build_help_text(
+    description="Name of Person or Team who originally designed/delivered this asset.",
+    examples=["Ayush Kumar", "Mirage Inc Consultants"],
+    restrictions=[
+        "Can be different from Uploaded By.",
+        "If not known, leave the default value `Unknown` as-is",
+        "Maximum Allowed Characters: 256"
+    ]
+)
+
+# ---------------------------------------------------------------------------
+# Location field help texts
+# ---------------------------------------------------------------------------
+
+COUNTRY_HELP = build_help_text(
+    description="Country where the project is located.",
+    examples=["India", "United Arab Emirates", "Singapore"],
+    restrictions=[
+        "Use full country names (no 2-letter codes).",
+        "Maximum allowed characters: 56"
+    ]
+)
+
+STATE_REGION_HELP = build_help_text(
+    description="State or region of the project location.",
+    examples=["Maharashtra", "Karnataka", "Dubai", "Bavaria"],
+    restrictions=[
+        "Use the state/region name as commonly written.",
+        "Maximum allowed characters: 58",
+        "If not known, leave it blank."
+    ]
+)
+
+CITY_HELP = build_help_text(
+    description="City where the project site is located.",
+    examples=["Mumbai", "Bengaluru", "Pune"],
+    restrictions=[
+        "Should be actual city / town name.",
+        "Maximum allowed characters: 100",
+        "If not known, leave it blank."
+    ]
+)
+
+LOCALITY_HELP = build_help_text(
+    description="Locality or neighborhood for finer-grained location.",
+    examples=["Andheri West", "Baner", "HSR Layout"],
+    restrictions=[
+        "If not known, leave the default value Unknown as-is.",
+        "Maximum Allowed Characters: 100",
+        "If not known, leave it blank."
+    ]
+)
+
+POSTAL_CODE_HELP = build_help_text(
+    description="Postal Code / ZIP code of the project location.",
+    examples=["400053", "560102"],
+    restrictions=[
+        "Maximum allowed characters: 10",
+        "If not known, leave it blank."
+    ]
+)
+
+
+# ---------------------------------------------------------------------------
+# View-level field help texts
+# ---------------------------------------------------------------------------
+
+VIEW_TYPE_HELP = build_help_text(
+    description="Type of drawing view for this asset instance.",
+    examples=["elevation", "plan", "section"],
+    restrictions=[
+        "Must be chosen from the drop-down",
+        "If suitable option not found, please contact admin for adding options."
+    ]
+)
+
+ORIENTATION_HELP = build_help_text(
+    description="Orientation of this view in the global layout.",
+    examples=["North", "South", "East", "West"],
+    restrictions=[
+        "Can only select from drop-down",
+        "Leave blank if not sure."
+    ]
+)
+
+SCALE_HELP = build_help_text(
+    description="Drawing to real-world scale ratio.",
+    examples=["1:20", "1:50", "1:100"],
+    restrictions=[
+        "Leave blank if not known",
+        "The template is <Drawing><:><Real World>"
+    ]
+)
+
+VIEW_NAME_HELP = build_help_text(
+    description="Human-friendly name for this view.",
+    examples=["Elevation A", "Section BB", "Wardrobe Front View"],
+    restrictions=[
+        "Only use alphabets and spaces",
+        "Likely to be mentioned at the bottom of the specific view.",
+        "Maximum allowed characters: 100",
+        "Leave blank if not sure"
+    ]
+)
+
+VIEW_DESCRIPTION_HELP = build_help_text(
+    description="Short description of what this view represents or highlights.",
+    examples=[
+        "Front elevation of master bedroom wardrobe.",
+        "Plan view showing wardrobe + study table integration."
+    ],
+    restrictions=[
+        "Keep it short (single sentence).",
+        "Maximum allowed characters: 256",
+        "Leave blank if not sure."
+    ]
+)
+
+SKETCH_UPLOAD_HELP = build_help_text(
+    description="Sketch corresponding to this view.",
+    examples=["Client hand-drawn sketch", "Internal conceptual sketch"],
+    restrictions=[
+        "PNG / JPG / JPEG / PDF allowed.",
+        "PNG is preferred",
+        "Refrain to upload if any format other than the above mentioned ones, and inform admin of the format, such that it can be added later."
+    ]
+)
+
+CAD_UPLOAD_HELP = build_help_text(
+    description="Final CAD file (DWG) for this view.",
+    examples=["AutoCAD .dwg file exported from your CAD workstation"],
+    restrictions=[
+        "Only .dwg files are allowed.",
+        "Refrain from uploading any other format files."
+    ]
+)
+```
+
+### 3.4. `constants/config.py`
 
 ```python
 """
@@ -159,13 +457,13 @@ This file is intentionally kept minimal; environment-specific values
 environment variables.
 """
 
-APP_TITLE: str = "Archimera Data Collector"
+APP_TITLE: str = "Archimera"
 
 # Placeholder for future use (when backend API exists)
 API_BASE_URL: str = "http://localhost:8000"
 ```
 
-### 3.4. `state/session_state.py`
+### 3.5. `state/session_state.py`
 
 ```python
 """
@@ -207,7 +505,7 @@ def get_state():
     return st.session_state
 ```
 
-### 3.5. `state/form_serializers.py`
+### 3.6. `state/form_serializers.py`
 
 ```python
 """
@@ -255,7 +553,7 @@ def build_submission_payload(asset_metadata: Dict[str, Any],
     return payload
 ```
 
-### 3.6. `utils/file_utils.py`
+### 3.7. `utils/file_utils.py`
 
 ```python
 """
@@ -291,14 +589,14 @@ def extract_file_metadata(upload) -> Optional[Dict[str, Any]]:
     }
 ```
 
-### 3.7. `utils/validators.py`
+### 3.8. `utils/validators.py`
 
 ```python
 """
 Validation helpers for form inputs and uploaded files.
 """
 
-from typing import Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import streamlit as st
 
@@ -360,9 +658,38 @@ def require_non_empty(label: str, value: str) -> None:
     """
     if not value or not value.strip():
         st.warning(f"{label} is currently empty. Backend may reject this later.")
+
+
+def validate_data(asset_metadata: Dict[str, Any]) -> Tuple[bool, str]:
+    """
+    A function which will validate user entered data and check for corrections if any.
+
+    Args:
+        asset_metadata: User entered information about assets.
+    
+    Returns:
+        bool:
+            True if data is correct and in sync with the format.
+            False if there are inconsistencies.
+        str:
+            OK if bool is True
+            Message describing the issue if bool is False.
+    """
+    # Checking Asset Level Metadata for correctness
+    if len(asset_metadata["client_name"]) == 0:
+        return (False, "Client Name can not be Empty.")
+    if len(asset_metadata["project_name"]) == 0:
+        return (False, "Project Name can not be Empty.")
+    if len(asset_metadata["uploaded_by"]) == 0:
+        return (False, "Please add your name in Uploaded By.")
+    if asset_metadata["studio"] is None:
+        return (False, "Please select your Studio.")
+    if len(asset_metadata["location"]["country"]) == 0:
+        return (False, "Country of Project cannot be Empty.")
+    return (True, "OK")
 ```
 
-### 3.8. `services/http_client.py`
+### 3.9. `services/http_client.py`
 
 ```python
 import requests
@@ -391,7 +718,7 @@ def post(path: str, json=None, files=None, data=None):
     return resp
 ```
 
-### 3.9. `services/asset_api.py`
+### 3.10. `services/asset_api.py`
 
 ```python
 """
@@ -449,7 +776,7 @@ def create_asset(asset_metadata: Dict[str, Any]) -> Dict[str, Any]:
     return response.json()
 ```
 
-### 3.10. `services/view_api.py`
+### 3.11. `services/view_api.py`
 
 ```python
 import json
@@ -489,7 +816,7 @@ def create_view(asset_id: str, view_metadata: Dict[str, Any], view_files: Dict[s
     return resp.json()
 ```
 
-### 3.11. `components/tag_selector.py`
+### 3.12. `components/tag_selector.py`
 
 ```python
 """
@@ -545,7 +872,7 @@ def render_tag_selector() -> None:
         st.json(state["asset_tags"])
 ```
 
-### 3.12. `components/file_uploaders.py`
+### 3.13. `components/file_uploaders.py`
 
 ```python
 """
@@ -558,7 +885,7 @@ keeping validation and configuration in a single place.
 import streamlit as st
 from utils.validators import validate_dwg
 
-def sketch_uploader(key: str):
+def sketch_uploader(key: str, help: str):
     """
     Render a file uploader widget for sketch files.
 
@@ -574,11 +901,11 @@ def sketch_uploader(key: str):
         label="Sketch Upload (PNG / JPG / JPEG / PDF)",
         type=["png", "jpg", "jpeg", "pdf"],
         key=key,
-        help="Upload the sketch for this view. Prefer PNG/JPG, PDF also allowed."
+        help=help
     )
     return file
 
-def cad_uploader(key: str):
+def cad_uploader(key: str, help: str):
     """
     Render a file uploader widget for CAD (.dwg) files.
 
@@ -592,7 +919,7 @@ def cad_uploader(key: str):
         label="CAD Upload (DWG)",
         type=["dwg"],
         key=key,
-        help="Upload the DWG file for this view."
+        help=help
     )
 
     # Run a simple validation to ensure correct file type/extension
@@ -600,7 +927,7 @@ def cad_uploader(key: str):
     return file
 ```
 
-### 3.13. `components/asset_form.py`
+### 3.14. `components/asset_form.py`
 
 ```python
 """
@@ -614,7 +941,8 @@ import streamlit as st
 from typing import Dict, Any
 
 from components.tag_selector import render_tag_selector
-from constants.view_types import PROJECT_TYPES, STUDIOS
+from constants.view_types import PROJECT_TYPES, STUDIOS, CATEGORY, ROOM_TYPE, STYLE
+from constants.help_texts import CLIENT_NAME_HELP, PROJECT_NAME_HELP, CATEGORY_HELP, SUBCATEGORY_HELP, PROJECT_TYPE_HELP, ROOM_TYPE_HELP, STYLE_HELP, STUDIO_HELP, UPLOADED_BY_HELP, CREATED_BY_HELP, COUNTRY_HELP, STATE_REGION_HELP, CITY_HELP, LOCALITY_HELP, POSTAL_CODE_HELP
 from state.session_state import get_state
 from utils.validators import normalize_text_field, require_non_empty
 
@@ -635,55 +963,68 @@ def render_asset_form() -> Dict[str, Any]:
     """
     st.markdown("### 1. Asset-Level Metadata")
 
-    col1, col2, col3 = st.columns(3)
+    row1_col1, row1_col2, row1_col3 = st.columns(3)
+    row2_col1, row2_col2, row2_col3, row2_col4 = st.columns(4)
+    row3_col1, row3_col2, row3_col3 = st.columns(3)
 
     # Basic project/asset identifiers
-    with col1:
-        client_name = st.text_input("Client Name")
-        project_name = st.text_input("Project Name")
-        category = st.text_input("Category (e.g., wardrobe, kitchen)")
-        subcategory = st.text_input("Subcategory (optional)")
+    with row1_col1:
+        client_name = st.text_input(label="Client Name :red[*]", max_chars=100, help=CLIENT_NAME_HELP, placeholder="ENTER CLIENT NAME")
+    with row1_col2:
+        project_name = st.text_input(label="Project Name :red[*]", max_chars=256, help=PROJECT_NAME_HELP, placeholder="ENTER PROJECT NAME")
+    with row1_col3:
+        category = st.selectbox(label="Category :red[*]", options=CATEGORY, index=0, help=CATEGORY_HELP)
+    with row2_col1:
+        subcategory = st.text_input(label="Subcategory", max_chars=64, help=SUBCATEGORY_HELP, placeholder="ENTER SUBCATEGORY")
 
     # Project context fields
-    with col2:
-        project_type = st.selectbox("Project Type", PROJECT_TYPES)
-        room_type = st.text_input("Room Type (optional)")
-        style = st.text_input("Style (e.g., modern, classic)")
+    with row2_col2:
+        project_type = st.selectbox(label="Project Type", options=PROJECT_TYPES, index=None, help=PROJECT_TYPE_HELP, placeholder="SELECT PROJECT TYPE")
+    with row2_col3:
+        room_type = st.selectbox(label="Room Type", options=ROOM_TYPE, index=None, help=ROOM_TYPE_HELP, placeholder="SELECT ROOM TYPE")
+    with row2_col4:
+        style = st.selectbox(label="style", options=STYLE, index=None, help=STYLE_HELP, placeholder="SELECT STYLE")
 
     # People + studio context
-    with col3:
-        created_by = st.text_input("Created By (optional)")
-        uploaded_by = st.text_input("Uploaded By")
-        studio = st.selectbox("Studio", STUDIOS)
+    with row3_col1:
+        created_by = st.text_input(label="Created By", value="Unknown", max_chars=256, help=CREATED_BY_HELP)
+    with row3_col2:
+        uploaded_by = st.text_input(label="Uploaded By :red[*]", max_chars=100, help=UPLOADED_BY_HELP, placeholder="ENTER YOUR NAME")
+    with row3_col3:
+        studio = st.selectbox(label="Studio :red[*]", options=STUDIOS, index=None, help=STUDIO_HELP, placeholder="SELECT YOUR STUDIO")
 
-    # Validating that Location fields are non empty
-    require_non_empty("Country", country)
-    require_non_empty("State / Region", state)
-    require_non_empty("City", city)
     
     # Location fields
     st.markdown("### 2. Project Location")
-    colL1, colL2 = st.columns(2)
+    row1_colL1, row1_colL2 = st.columns(2)
+    row2_colL1, row2_colL2, row2_colL3 = st.columns(3)
 
-    with colL1:
-        country = st.text_input("Country")
-        state = st.text_input("State / Region")
-        city = st.text_input("City")
-
-    with colL2:
-        locality = st.text_input("Locality (optional)")
-        postal_code = st.text_input("Postal Code / ZIP (optional)")
+    with row1_colL1:
+        country = st.text_input(label="Country :red[*]", max_chars=56, help=COUNTRY_HELP, placeholder="ENTER COUNTRY")
+    with row1_colL2:
+        state_region = st.text_input(label="State / Region", max_chars=58, help=STATE_REGION_HELP, placeholder="ENTER STATE")
+    with row2_colL1:
+        city = st.text_input(label="City", max_chars=100, help=CITY_HELP, placeholder="ENTER CITY")
+    with row2_colL2:
+        locality = st.text_input(label="Locality", max_chars=100, help=LOCALITY_HELP, placeholder="ENTER LOCALITY")
+    with row2_colL3:
+        postal_code = st.text_input(label="Postal Code / ZIP", max_chars=10, help=POSTAL_CODE_HELP, placeholder="ENTER POSTAL CODE")
+    
+    # Basic non-empty checks AFTER fields are defined
+    # require_non_empty("Country", country)
+    # require_non_empty("State / Region", state_region)
+    # require_non_empty("City", city)
 
     # Tag selection (predefined vocab, multi-select)
     st.markdown("### 3. Asset-Level Tags")
     render_tag_selector()
 
-    state = get_state()
+    session_state = get_state()
 
     category_norm = normalize_text_field(category)
     subcategory_norm = normalize_text_field(subcategory)
-    room_type_norm = normalize_text_field(room_type)
-    style_norm = normalize_text_field(style)
+    # room_type_norm = normalize_text_field(room_type)
+    # style_norm = normalize_text_field(style)
 
     # Build and return the asset metadata dictionary
     asset_metadata: Dict[str, Any] = {
@@ -691,27 +1032,27 @@ def render_asset_form() -> Dict[str, Any]:
         "project_name": project_name,
         "category": category_norm,
         "subcategory": subcategory_norm or None,
-        "project_type": project_type.strip().lower(),
-        "room_type": room_type_norm or None,
-        "style": style_norm or None,
+        "project_type": project_type,
+        "room_type": room_type or None,
+        "style": style or None,
         "created_by": created_by or None,
         "uploaded_by": uploaded_by,
         "studio": studio or None,
         "location": {
             "country": country,
-            "state": state,
+            "state": state_region,
             "city": city,
             "locality": locality or None,
             "postal_code": postal_code or None,
         },
         # Tags are read directly from session state (set by tag selector)
-        "tags": state["asset_tags"],
+        "tags": session_state["asset_tags"],
     }
 
     return asset_metadata
 ```
 
-### 3.14. `components/view_form.py`
+### 3.15. `components/view_form.py`
 
 ```python
 """
@@ -733,6 +1074,7 @@ import streamlit as st
 
 from components.file_uploaders import sketch_uploader, cad_uploader
 from constants.view_types import VIEW_TYPES, ORIENTATIONS
+from constants.help_texts import VIEW_TYPE_HELP, ORIENTATION_HELP, SCALE_HELP, VIEW_NAME_HELP, VIEW_DESCRIPTION_HELP, SKETCH_UPLOAD_HELP, CAD_UPLOAD_HELP
 from state.session_state import get_state
 from utils.validators import normalize_text_field
 
@@ -784,13 +1126,15 @@ def render_view_section() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
 
             with col1:
                 view_type = st.selectbox(
-                    "View Type",
-                    VIEW_TYPES,
+                    label="View Type :red[*]",
+                    options=VIEW_TYPES,
+                    help=VIEW_TYPE_HELP,
                     key=f"{view_id}_type"
                 )
                 orientation_raw = st.selectbox(
-                    "Orientation (optional)",
-                    ORIENTATIONS,
+                    label="Orientation",
+                    options=ORIENTATIONS,
+                    help=ORIENTATION_HELP,
                     key=f"{view_id}_orientation"
                 )
                 # Normalize "None" to actual None
@@ -798,16 +1142,23 @@ def render_view_section() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
 
             with col2:
                 scale = st.text_input(
-                    "Scale (optional, e.g., 1:50)",
-                    key=f"{view_id}_scale"
+                    label="Scale",
+                    help=SCALE_HELP,
+                    key=f"{view_id}_scale",
+                    placeholder="ENTER SCALE"
                 )
                 view_name = st.text_input(
-                    "View Name (optional)",
-                    key=f"{view_id}_name"
+                    label="View Name",
+                    max_chars=100,
+                    help=VIEW_NAME_HELP,
+                    key=f"{view_id}_name",
+                    placeholder="ENTER VIEW NAME"
                 )
 
             description = st.text_area(
-                "Description (optional)",
+                label="Description",
+                max_chars=256,
+                help=VIEW_DESCRIPTION_HELP,
                 key=f"{view_id}_desc"
             )
 
@@ -815,8 +1166,8 @@ def render_view_section() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
 
             # File uploads are just raw UploadedFile objects for now;
             # later they will be serialized or passed to backend for storage.
-            sketch_file = sketch_uploader(key=f"{view_id}_sketch")
-            cad_file = cad_uploader(key=f"{view_id}_cad")
+            sketch_file = sketch_uploader(key=f"{view_id}_sketch", help=SKETCH_UPLOAD_HELP)
+            cad_file = cad_uploader(key=f"{view_id}_cad", help=CAD_UPLOAD_HELP)
 
             # Store the collected values back into the 'data' field
             view_metadata = {
@@ -839,7 +1190,7 @@ def render_view_section() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     return all_views_metadata, all_views_files
 ```
 
-### 3.15. `app.py`
+### 3.16. `app.py`
 
 ```python
 """
@@ -857,6 +1208,7 @@ from components.view_form import render_view_section
 from services import asset_api, view_api
 from state.session_state import init_session_state
 from state.form_serializers import build_submission_payload
+from utils.validators import validate_data
 from constants.config import APP_TITLE
 
 
@@ -902,19 +1254,23 @@ def main() -> None:
 
         # Action button to "submit" the asset (mock only for now)
         if st.button("🚀 Submit Asset (Mock — nothing is stored)"):
-            # payload = build_submission_payload(asset_metadata, views)
-            # st.success("Form validated! (Mock submission — no persistence yet).")
-            # st.json(payload)
+            is_valid = validate_data(asset_metadata)
+            if is_valid[0]:
+                payload = build_submission_payload(asset_metadata, view_metadata_list)
+                st.success("Form validated! (Mock submission — no persistence yet).")
+                st.json(payload)
+            else:
+                st.error(f"validation error: {is_valid[1]}")
             # * Responsive Devs
             # 1. Create Asset
-            asset_resp = asset_api.create_asset(asset_metadata)
-            asset_id = asset_resp["id"]
+            # asset_resp = asset_api.create_asset(asset_metadata)
+            # asset_id = asset_resp["id"]
 
-            # 2. Create each view with metadata + files
-            for meta, files in zip(view_metadata_list, view_files_list):
-                view_api.create_view(asset_id, meta, files)
+            # # 2. Create each view with metadata + files
+            # for meta, files in zip(view_metadata_list, view_files_list):
+            #     view_api.create_view(asset_id, meta, files)
             
-            st.success(f"Asset {asset_id} and {len(view_metadata_list)} views submitted.")
+            # st.success(f"Asset {asset_id} and {len(view_metadata_list)} views submitted.")
 
 
 if __name__ == "__main__":

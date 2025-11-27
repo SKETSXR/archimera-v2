@@ -8,7 +8,7 @@ keeping validation and configuration in a single place.
 import streamlit as st
 from utils.validators import validate_dwg
 
-def sketch_uploader(key: str):
+def sketch_uploader(key: str, help: str):
     """
     Render a file uploader widget for sketch files.
 
@@ -24,11 +24,11 @@ def sketch_uploader(key: str):
         label="Sketch Upload (PNG / JPG / JPEG / PDF)",
         type=["png", "jpg", "jpeg", "pdf"],
         key=key,
-        help="Upload the sketch for this view. Prefer PNG/JPG, PDF also allowed."
+        help=help
     )
     return file
 
-def cad_uploader(key: str):
+def cad_uploader(key: str, help: str):
     """
     Render a file uploader widget for CAD (.dwg) files.
 
@@ -42,7 +42,7 @@ def cad_uploader(key: str):
         label="CAD Upload (DWG)",
         type=["dwg"],
         key=key,
-        help="Upload the DWG file for this view."
+        help=help
     )
 
     # Run a simple validation to ensure correct file type/extension

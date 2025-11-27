@@ -13,7 +13,7 @@ from typing import Dict, Any, List
 
 
 def build_submission_payload(asset_metadata: Dict[str, Any],
-                             views: List[Dict[str, Any]]) -> Dict[str, Any]:
+                             views_metadata: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Build the top-level submission payload combining asset metadata and views.
 
@@ -37,7 +37,7 @@ def build_submission_payload(asset_metadata: Dict[str, Any],
             "uploaded_at": now_utc,
             "updated_at": now_utc,
         },
-        "views": views
+        "views": views_metadata
     }
 
     return payload

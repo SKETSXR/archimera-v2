@@ -17,6 +17,7 @@ import streamlit as st
 
 from components.file_uploaders import sketch_uploader, cad_uploader
 from constants.view_types import VIEW_TYPES, ORIENTATIONS
+from constants.help_texts import VIEW_TYPE_HELP, ORIENTATION_HELP, SCALE_HELP, VIEW_NAME_HELP, VIEW_DESCRIPTION_HELP, SKETCH_UPLOAD_HELP, CAD_UPLOAD_HELP
 from state.session_state import get_state
 from utils.validators import normalize_text_field
 
@@ -68,13 +69,15 @@ def render_view_section() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
 
             with col1:
                 view_type = st.selectbox(
-                    "View Type",
-                    VIEW_TYPES,
+                    label="View Type :red[*]",
+                    options=VIEW_TYPES,
+                    help=VIEW_TYPE_HELP,
                     key=f"{view_id}_type"
                 )
                 orientation_raw = st.selectbox(
-                    "Orientation (optional)",
-                    ORIENTATIONS,
+                    label="Orientation",
+                    options=ORIENTATIONS,
+                    help=ORIENTATION_HELP,
                     key=f"{view_id}_orientation"
                 )
                 # Normalize "None" to actual None
@@ -82,16 +85,23 @@ def render_view_section() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
 
             with col2:
                 scale = st.text_input(
-                    "Scale (optional, e.g., 1:50)",
-                    key=f"{view_id}_scale"
+                    label="Scale",
+                    help=SCALE_HELP,
+                    key=f"{view_id}_scale",
+                    placeholder="ENTER SCALE"
                 )
                 view_name = st.text_input(
-                    "View Name (optional)",
-                    key=f"{view_id}_name"
+                    label="View Name",
+                    max_chars=100,
+                    help=VIEW_NAME_HELP,
+                    key=f"{view_id}_name",
+                    placeholder="ENTER VIEW NAME"
                 )
 
             description = st.text_area(
-                "Description (optional)",
+                label="Description",
+                max_chars=256,
+                help=VIEW_DESCRIPTION_HELP,
                 key=f"{view_id}_desc"
             )
 
@@ -99,8 +109,8 @@ def render_view_section() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
 
             # File uploads are just raw UploadedFile objects for now;
             # later they will be serialized or passed to backend for storage.
-            sketch_file = sketch_uploader(key=f"{view_id}_sketch")
-            cad_file = cad_uploader(key=f"{view_id}_cad")
+            sketch_file = sketch_uploader(key=f"{view_id}_sketch", help=SKETCH_UPLOAD_HELP)
+            cad_file = cad_uploader(key=f"{view_id}_cad", help=CAD_UPLOAD_HELP)
 
             # Store the collected values back into the 'data' field
             view_metadata = {

@@ -2,7 +2,7 @@
 Validation helpers for form inputs and uploaded files.
 """
 
-from typing import Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import streamlit as st
 
@@ -64,3 +64,32 @@ def require_non_empty(label: str, value: str) -> None:
     """
     if not value or not value.strip():
         st.warning(f"{label} is currently empty. Backend may reject this later.")
+
+
+def validate_data(asset_metadata: Dict[str, Any]) -> Tuple[bool, str]:
+    """
+    A function which will validate user entered data and check for corrections if any.
+
+    Args:
+        asset_metadata: User entered information about assets.
+    
+    Returns:
+        bool:
+            True if data is correct and in sync with the format.
+            False if there are inconsistencies.
+        str:
+            OK if bool is True
+            Message describing the issue if bool is False.
+    """
+    # Checking Asset Level Metadata for correctness
+    if len(asset_metadata["client_name"]) == 0:
+        return (False, "Client Name can not be Empty.")
+    if len(asset_metadata["project_name"]) == 0:
+        return (False, "Project Name can not be Empty.")
+    if len(asset_metadata["uploaded_by"]) == 0:
+        return (False, "Please add your name in Uploaded By.")
+    if asset_metadata["studio"] is None:
+        return (False, "Please select your Studio.")
+    if len(asset_metadata["location"]["country"]) == 0:
+        return (False, "Country of Project cannot be Empty.")
+    return (True, "OK")
