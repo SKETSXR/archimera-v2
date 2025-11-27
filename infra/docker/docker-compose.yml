@@ -1,11 +1,11 @@
 # infra/docker/docker-compose.yml
-version: "3.9"
+# version: "3.9"
 
 services:
   mongo:
     image: mongo:7
     container_name: archimera_mongo
-    restart: unless-stopped
+    restart: always
     ports:
       - "27017:27017"
     volumes:
@@ -18,7 +18,7 @@ services:
     container_name: archimera_backend
     depends_on:
       - mongo
-    restart: unless-stopped
+    restart: always
     environment:
       MONGO_URI: "mongodb://mongo:27017/cad_db"
       # add other backend env vars here as needed
@@ -26,7 +26,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ../asset_store:/mnt/assets
+      - archimera_nas:/mnt/assets
 
   retrieval:
     build:
@@ -35,7 +35,7 @@ services:
     container_name: archimera_retrieval
     depends_on:
       - mongo
-    restart: unless-stopped
+    restart: always
     environment:
       MONGO_URI: "mongodb://mongo:27017/cad_db"
       # MODEL_VERSION: "v1.0"
@@ -43,7 +43,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ../asset_store:/mnt/assets:ro
+      - archimera_nas:/mnt/assets:ro
 
   ml:
     build:
@@ -59,7 +59,7 @@ services:
       FILE_BASE_DIR: "/mnt/assets"
     command: ["sleep", "infinity"]
     volumes:
-      - ../asset_store:/mnt/assets:ro
+      - archimera_nas:/mnt/assets:ro
     # no ports; you'll run batch jobs manually:
     # docker compose run --rm ml python -m ml.training.train_contrastive
 
@@ -70,7 +70,7 @@ services:
     container_name: archimera_ui
     depends_on:
       - backend
-    restart: unless-stopped
+    restart: always
     environment:
       BACKEND_URL: "http://backend:8000"
     ports:
@@ -78,3 +78,5 @@ services:
 
 volumes:
   mongo_data:
+  archimera_nas:
+    external: true
