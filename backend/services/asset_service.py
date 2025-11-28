@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from bson import ObjectId
-from db.asset_models import AssetCreate, AssetInDB, AssetPublic, AssetTagTextState
+from backend.db.asset_models import AssetCreate, AssetInDB, AssetPublic, AssetTagTextState
 from pymongo.database import Database
 
 

@@ -3,8 +3,8 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Annotated, Literal, Optional
 
-from db.common_models import FileRef
-from pydantic import BaseModel, ConfigDict, Field
+from backend.db.common_models import FileRef, empty_str_to_none
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 Scale = Annotated[str, Field(pattern=r"^\s*1\s*:\s*[1-9]\d*(?:\.\d+)?\s*$", min_length=1, max_length=10)]
@@ -40,6 +40,11 @@ class ViewCreate(BaseModel):
     scale: Optional[Scale] = None
     view_name: Optional[ViewName] = None
     description: Optional[ViewDescription] = None
+
+    @field_validator("orientation", "scale", "view_name", "description", mode="before")
+    @classmethod
+    def _empty_optional_strs(cls, v):
+        return empty_str_to_none(v)
 
 
 class ViewInDB(ViewBase):

@@ -3,11 +3,11 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 from bson import ObjectId
-from db.view_models import ViewCreate, ViewFiles, ViewInDB, ViewPublic
+from backend.db.view_models import ViewCreate, ViewFiles, ViewInDB, ViewPublic
 from fastapi import HTTPException, status
 from pymongo.database import Database
-from services.asset_service import get_asset
-from storage.base import StorageBackend
+from backend.services.asset_service import get_asset
+from backend.storage.base import StorageBackend
 
 
 def create_view(

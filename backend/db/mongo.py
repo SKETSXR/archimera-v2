@@ -2,7 +2,7 @@
 from __future__ import annotations
 from typing import Generator, Optional
 
-from core.config import settings
+from backend.core.config import settings
 from pymongo import MongoClient
 from pymongo.database import Database
 

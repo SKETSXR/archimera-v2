@@ -1,6 +1,6 @@
 #backend/db/init_indexes.py
 from __future__ import annotations
-from db.mongo import get_database
+from backend.db.mongo import get_database
 from pymongo import ASCENDING, TEXT
 from pymongo.database import Database
 

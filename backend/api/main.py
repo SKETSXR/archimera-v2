@@ -1,6 +1,6 @@
 #backend/api/main.py
 from __future__ import annotations
-from api.routes import assets, views
+from backend.api.routes import assets, views
 from fastapi import FastAPI
 
 

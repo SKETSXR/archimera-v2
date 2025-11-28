@@ -3,13 +3,13 @@ from __future__ import annotations
 import json
 from typing import Optional
 
-from api.deps import get_db, get_storage
-from db.view_models import ViewCreate, ViewPublic
+from backend.api.deps import get_db, get_storage
+from backend.db.view_models import ViewCreate, ViewPublic
 from fastapi import APIRouter, Depends, File, Form, HTTPException, status, UploadFile
 from pydantic import ValidationError
 from pymongo.database import Database
-from services.view_service import create_view as svc_create_view
-from storage.base import StorageBackend
+from backend.services.view_service import create_view as svc_create_view
+from backend.storage.base import StorageBackend
 
 
 router = APIRouter(prefix="/assets/{asset_id}/views", tags=["views"])

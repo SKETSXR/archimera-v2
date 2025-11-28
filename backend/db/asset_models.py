@@ -3,8 +3,8 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Annotated, List, Literal, Optional
 
-from db.common_models import ProjectLocation, Tag
-from pydantic import BaseModel, ConfigDict, Field
+from backend.db.common_models import ProjectLocation, Tag, empty_str_to_none
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 ClientName = Annotated[str, Field(min_length=1, max_length=100)]
@@ -31,6 +31,11 @@ class AssetBase(BaseModel):
 
     location: ProjectLocation
     tags: List[Tag] = Field(default_factory=list)
+
+    @field_validator("subcategory", "created_by", "project_type", "room_type", "style", mode="before")
+    @classmethod
+    def _empty_optional_strs(cls, v):
+        return empty_str_to_none(v)
 
 
 class AssetTagTextState(BaseModel):

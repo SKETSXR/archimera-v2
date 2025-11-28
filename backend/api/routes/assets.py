@@ -1,10 +1,10 @@
 #backend/api/routes/assets.py
 from __future__ import annotations
-from api.deps import get_db
-from db.asset_models import AssetCreate, AssetPublic
+from backend.api.deps import get_db
+from backend.db.asset_models import AssetCreate, AssetPublic
 from fastapi import APIRouter, Depends, HTTPException, status
 from pymongo.database import Database
-from services import asset_service
+from backend.services import asset_service
 
 
 router = APIRouter(prefix="/assets", tags=["assets"])

@@ -3,10 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional
 
-from db.common_models import FileRef
-from db.view_models import ViewFiles
+from backend.db.common_models import FileRef
+from backend.db.view_models import ViewFiles
 from fastapi import UploadFile
-from storage.base import StorageBackend
+from backend.storage.base import StorageBackend
 
 
 class FileSystemStorage(StorageBackend):

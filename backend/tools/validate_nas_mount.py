@@ -8,7 +8,7 @@ import sys
 import traceback
 from typing import NoReturn
 
-from core.config import settings
+from backend.core.config import settings
 
 
 def _fail(msg: str, exit_code: int = 1) -> NoReturn:

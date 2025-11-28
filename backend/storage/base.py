@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from db.view_models import ViewFiles
+from backend.db.view_models import ViewFiles
 from fastapi import UploadFile
 
 
