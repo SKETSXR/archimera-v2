@@ -1,1 +1,3 @@
-#Placeholder to make it package
+"""
+Archimera Backend package.
+"""
