@@ -9,6 +9,7 @@ The goal is:
 
 from typing import Iterable, Optional
 
+
 def build_help_text(
     description: str,
     examples: Optional[Iterable[str]] = None,
@@ -59,6 +60,7 @@ def build_help_text(
 # ---------------------------------------------------------------------------
 # Asset-level field help texts
 # ---------------------------------------------------------------------------
+
 
 CLIENT_NAME_HELP = build_help_text(
     description="Name of Client to which the project was delivered.",

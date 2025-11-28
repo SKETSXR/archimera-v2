@@ -10,16 +10,24 @@ Handles the per-view fields for an asset. Each view includes:
 - CAD upload
 """
 
+from typing import Any, Dict, List, Tuple
 import uuid
-from typing import List, Dict, Any, Tuple
 
-import streamlit as st
-
-from components.file_uploaders import sketch_uploader, cad_uploader
-from constants.view_types import VIEW_TYPES, ORIENTATIONS
-from constants.help_texts import VIEW_TYPE_HELP, ORIENTATION_HELP, SCALE_HELP, VIEW_NAME_HELP, VIEW_DESCRIPTION_HELP, SKETCH_UPLOAD_HELP, CAD_UPLOAD_HELP
+from components.file_uploaders import cad_uploader, sketch_uploader
+from constants.help_texts import (
+    CAD_UPLOAD_HELP,
+    ORIENTATION_HELP,
+    SCALE_HELP,
+    SKETCH_UPLOAD_HELP,
+    VIEW_DESCRIPTION_HELP,
+    VIEW_NAME_HELP,
+    VIEW_TYPE_HELP,
+)
+from constants.view_types import ORIENTATIONS, VIEW_TYPES
 from state.session_state import get_state
+import streamlit as st
 from utils.validators import normalize_text_field
+
 
 def _create_empty_view() -> Dict[str, Any]:
     """

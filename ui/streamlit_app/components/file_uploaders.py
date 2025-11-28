@@ -8,6 +8,7 @@ keeping validation and configuration in a single place.
 import streamlit as st
 from utils.validators import validate_dwg
 
+
 def sketch_uploader(key: str, help: str):
     """
     Render a file uploader widget for sketch files.
@@ -27,6 +28,7 @@ def sketch_uploader(key: str, help: str):
         help=help
     )
     return file
+
 
 def cad_uploader(key: str, help: str):
     """

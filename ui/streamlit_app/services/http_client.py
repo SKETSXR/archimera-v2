@@ -1,6 +1,6 @@
+from constants.config import API_BASE_URL
 import requests
 
-from constants.config import API_BASE_URL
 
 def post(path: str, json=None, files=None, data=None):
     """

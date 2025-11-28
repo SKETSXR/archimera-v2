@@ -7,7 +7,7 @@ These helpers are not deeply used yet, but will be handy when:
 - Logging or debugging uploads.
 """
 
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 
 def extract_file_metadata(upload) -> Optional[Dict[str, Any]]:

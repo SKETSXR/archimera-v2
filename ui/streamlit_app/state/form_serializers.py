@@ -9,7 +9,7 @@ Right now this module is light, but it will grow as the schema evolves.
 """
 
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 
 def build_submission_payload(asset_metadata: Dict[str, Any],

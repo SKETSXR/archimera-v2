@@ -2,7 +2,7 @@
 Validation helpers for form inputs and uploaded files.
 """
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Tuple
 
 import streamlit as st
 

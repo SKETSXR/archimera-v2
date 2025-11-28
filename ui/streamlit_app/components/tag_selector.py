@@ -6,10 +6,9 @@ and synchronizes the selected tags into `st.session_state["asset_tags"]`
 in a normalized {category, value} format.
 """
 
-import streamlit as st
-
 from constants.tag_vocab import TAG_OPTIONS
 from state.session_state import get_state
+import streamlit as st
 
 
 def render_tag_selector() -> None:

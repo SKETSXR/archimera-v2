@@ -16,8 +16,7 @@ Notes:
       because those require multipart file uploads.
 """
 
-import json
-from typing import Dict, Any
+from typing import Any, Dict
 
 from .http_client import post
 

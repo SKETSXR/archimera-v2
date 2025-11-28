@@ -5,14 +5,30 @@ This module renders all fields that are captured once per asset:
 client, project, location, project type, style, and asset-level tags.
 """
 
-import streamlit as st
-from typing import Dict, Any
+from typing import Any, Dict
 
 from components.tag_selector import render_tag_selector
-from constants.view_types import PROJECT_TYPES, STUDIOS, CATEGORY, ROOM_TYPE, STYLE
-from constants.help_texts import CLIENT_NAME_HELP, PROJECT_NAME_HELP, CATEGORY_HELP, SUBCATEGORY_HELP, PROJECT_TYPE_HELP, ROOM_TYPE_HELP, STYLE_HELP, STUDIO_HELP, UPLOADED_BY_HELP, CREATED_BY_HELP, COUNTRY_HELP, STATE_REGION_HELP, CITY_HELP, LOCALITY_HELP, POSTAL_CODE_HELP
+from constants.help_texts import (
+    CATEGORY_HELP,
+    CITY_HELP,
+    CLIENT_NAME_HELP,
+    COUNTRY_HELP,
+    CREATED_BY_HELP,
+    LOCALITY_HELP,
+    POSTAL_CODE_HELP,
+    PROJECT_NAME_HELP,
+    PROJECT_TYPE_HELP,
+    ROOM_TYPE_HELP,
+    STATE_REGION_HELP,
+    STUDIO_HELP,
+    STYLE_HELP,
+    SUBCATEGORY_HELP,
+    UPLOADED_BY_HELP,
+)
+from constants.view_types import CATEGORY, PROJECT_TYPES, ROOM_TYPE, STUDIOS, STYLE
 from state.session_state import get_state
-from utils.validators import normalize_text_field, require_non_empty
+import streamlit as st
+from utils.validators import normalize_text_field
 
 
 def render_asset_form() -> Dict[str, Any]:
@@ -64,18 +80,18 @@ def render_asset_form() -> Dict[str, Any]:
     
     # Location fields
     st.markdown("### 2. Project Location")
-    row1_colL1, row1_colL2 = st.columns(2)
-    row2_colL1, row2_colL2, row2_colL3 = st.columns(3)
+    row1_coll1, row1_coll2 = st.columns(2)
+    row2_coll1, row2_coll2, row2_coll3 = st.columns(3)
 
-    with row1_colL1:
+    with row1_coll1:
         country = st.text_input(label="Country :red[*]", max_chars=56, help=COUNTRY_HELP, placeholder="ENTER COUNTRY")
-    with row1_colL2:
+    with row1_coll2:
         state_region = st.text_input(label="State / Region", max_chars=58, help=STATE_REGION_HELP, placeholder="ENTER STATE")
-    with row2_colL1:
+    with row2_coll1:
         city = st.text_input(label="City", max_chars=100, help=CITY_HELP, placeholder="ENTER CITY")
-    with row2_colL2:
+    with row2_coll2:
         locality = st.text_input(label="Locality", max_chars=100, help=LOCALITY_HELP, placeholder="ENTER LOCALITY")
-    with row2_colL3:
+    with row2_coll3:
         postal_code = st.text_input(label="Postal Code / ZIP", max_chars=10, help=POSTAL_CODE_HELP, placeholder="ENTER POSTAL CODE")
     
     # Basic non-empty checks AFTER fields are defined

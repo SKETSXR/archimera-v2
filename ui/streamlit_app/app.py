@@ -6,15 +6,13 @@ All heavy lifting is delegated to functions in the `components`, `state`,
 and `constants` modules.
 """
 
-import streamlit as st
-
 from components.asset_form import render_asset_form
 from components.view_form import render_view_section
+from constants.config import APP_TITLE
 from services import asset_api, view_api
 from state.session_state import init_session_state
-from state.form_serializers import build_submission_payload
+import streamlit as st
 from utils.validators import validate_data
-from constants.config import APP_TITLE
 
 
 def main() -> None:
@@ -60,22 +58,25 @@ def main() -> None:
         # Action button to "submit" the asset (mock only for now)
         if st.button("🚀 Submit Asset (Mock — nothing is stored)"):
             is_valid = validate_data(asset_metadata)
-            if is_valid[0]:
-                payload = build_submission_payload(asset_metadata, view_metadata_list)
-                st.success("Form validated! (Mock submission — no persistence yet).")
-                st.json(payload)
-            else:
-                st.error(f"validation error: {is_valid[1]}")
+            # if is_valid[0]:
+            #     payload = build_submission_payload(asset_metadata, view_metadata_list)
+            #     st.success("Form validated! (Mock submission — no persistence yet).")
+            #     st.json(payload)
+            # else:
+            #     st.error(f"validation error: {is_valid[1]}")
             # * Responsive Devs
-            # 1. Create Asset
-            # asset_resp = asset_api.create_asset(asset_metadata)
-            # asset_id = asset_resp["id"]
+            if is_valid[0]:
+                # 1. Create Asset
+                asset_resp = asset_api.create_asset(asset_metadata)
+                asset_id = asset_resp["id"]
 
-            # # 2. Create each view with metadata + files
-            # for meta, files in zip(view_metadata_list, view_files_list):
-            #     view_api.create_view(asset_id, meta, files)
-            
-            # st.success(f"Asset {asset_id} and {len(view_metadata_list)} views submitted.")
+                # 2. Create each view with metadata + files
+                for meta, files in zip(view_metadata_list, view_files_list):
+                    view_api.create_view(asset_id, meta, files)
+                
+                st.success(f"Asset {asset_id} and {len(view_metadata_list)} views submitted.")
+            else:
+                st.error(f"Validation Error: {is_valid[1]}")
 
 
 if __name__ == "__main__":
